@@ -42,4 +42,16 @@ public class HandlerControllerException {
 				.build(),
 				HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<BaseException> handleEntityNotFoundException(
+			Exception ex) {
+		
+		return new ResponseEntity<BaseException>(BaseException.builder()
+				.mensagem("Erro interno")
+				.detalhes(null)
+				.data(LocalDate.now())
+				.build(),
+				HttpStatus.NOT_FOUND);
+	}
 }

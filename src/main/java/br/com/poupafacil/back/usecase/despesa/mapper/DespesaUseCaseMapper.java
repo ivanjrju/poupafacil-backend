@@ -22,6 +22,7 @@ public class DespesaUseCaseMapper {
 	public DespesaModel fromDespesaModel(DespesaDataInput despesaDataInput) {
 		
 		return DespesaModel.builder()
+			.nomeDespesa(despesaDataInput.getNomeDespesa())
 			.idCorrelacaoParcela(despesaDataInput.getIdCorrelacaoParcela())
 			.valorDespesa(despesaDataInput.getValor())
 			.valorTotal(despesaDataInput.getValor())
@@ -35,6 +36,7 @@ public class DespesaUseCaseMapper {
 		
 		return DespesaDataOutput.builder()
 			.idDespesa(despesaModel.getIdDespesa())
+			.nomeDespesa(despesaModel.getNomeDespesa())
 			.grupo(grupoUseCaseMapper.toGrupoModel(despesaModel.getGrupo()))
 			.proprietarioDespesa(pessoaUseCaseMapper.toPessoaModel(despesaModel.getProprietarioDespesa()))
 			.idCorrelacaoParcela(despesaModel.getIdCorrelacaoParcela())

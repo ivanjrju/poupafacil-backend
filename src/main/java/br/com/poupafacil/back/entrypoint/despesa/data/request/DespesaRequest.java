@@ -14,6 +14,9 @@ import lombok.Data;
 @Data
 public class DespesaRequest {
 
+	@NotNull(message = "'nomeDespesa' é obrigatório")
+	private String nomeDespesa;
+	
 	private Long idGrupo;
 	
 	@NotNull(message = "'proprietarioDespesa' é obrigatório")

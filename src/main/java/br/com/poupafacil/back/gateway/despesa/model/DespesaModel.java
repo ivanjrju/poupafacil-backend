@@ -29,6 +29,8 @@ public class DespesaModel implements Cloneable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long idDespesa;
 	
+	private String nomeDespesa;
+	
 	@ManyToOne
 	private PessoaModel proprietarioDespesa;
 	

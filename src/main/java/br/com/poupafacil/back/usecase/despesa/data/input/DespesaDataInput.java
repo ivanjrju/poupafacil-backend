@@ -13,6 +13,7 @@ import lombok.Data;
 @Builder
 public class DespesaDataInput {
 
+	private String nomeDespesa;
 	private Long grupo;
 	private Long proprietarioDespesa;
 	private String idCorrelacaoParcela;

@@ -25,6 +25,7 @@ public class DespesaEntryPointMapper {
 	public DespesaDataInput fromDespesaUseCaseInput(DespesaRequest despesaRequest) {
 		
 		return DespesaDataInput.builder()
+				.nomeDespesa(despesaRequest.getNomeDespesa())
 				.proprietarioDespesa(despesaRequest.getProprietarioDespesa())
 				.grupo(despesaRequest.getIdGrupo())
 				.valor(despesaRequest.getValor())
@@ -37,6 +38,7 @@ public class DespesaEntryPointMapper {
 		
 		return DespesaResponse.builder()
 			.idDespesa(despesaDataOutput.getIdDespesa())
+			.nomeDespesa(despesaDataOutput.getNomeDespesa())
 			.grupo(grupoEntryPointMapper.toGrupoDataOutput(despesaDataOutput.getGrupo()))
 			.idProprietarioDespesa(Objects.isNull(despesaDataOutput.getProprietarioDespesa()) ? null : despesaDataOutput.getProprietarioDespesa().getIdPessoa())
 			.idCorrelacaoParcela(despesaDataOutput.getIdCorrelacaoParcela())

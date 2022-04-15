@@ -15,6 +15,7 @@ import lombok.Data;
 public class DespesaResponse {
 
 	private Long idDespesa;
+	private String nomeDespesa;
 	private GrupoResponse grupo;
 	private Long idProprietarioDespesa;
 	private String idCorrelacaoParcela;

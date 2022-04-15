@@ -2,6 +2,7 @@ package br.com.poupafacil.back.gateway.pessoa.model;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +26,9 @@ public class PessoaModel {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long idPessoa;
 	
+	@Column(unique=true)
 	private String email;
+	
 	private String nome;
 	private BigDecimal renda;
 }
