@@ -1,6 +1,8 @@
 package br.com.poupafacil.back.usecase.grupo.mapper;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -42,5 +44,10 @@ public class GrupoUseCaseMapper {
 				.nome(grupoDataOutput.getNome())
 				.pessoas(pessoaUseCaseMapper.toPessoaDataOutput(grupoDataOutput.getPessoas()))
 				.build();
+	}
+
+	public List<GrupoDataOutput> toGrupoModel(List<GrupoModel> gruposModel) {
+		
+		return gruposModel.stream().map(grupoModel -> toGrupoModel(grupoModel)).collect(Collectors.toList());
 	}
 }

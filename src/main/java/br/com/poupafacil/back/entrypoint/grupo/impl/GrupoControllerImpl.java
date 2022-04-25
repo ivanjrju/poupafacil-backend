@@ -1,5 +1,7 @@
 package br.com.poupafacil.back.entrypoint.grupo.impl;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.poupafacil.back.entrypoint.grupo.GrupoController;
 import br.com.poupafacil.back.entrypoint.grupo.data.request.GrupoRequest;
+import br.com.poupafacil.back.entrypoint.grupo.data.response.GrupoPorPessoaResponse;
 import br.com.poupafacil.back.entrypoint.grupo.data.response.GrupoResponse;
 import br.com.poupafacil.back.entrypoint.grupo.mapper.GrupoEntryPointMapper;
 import br.com.poupafacil.back.usecase.grupo.GrupoUseCase;
@@ -21,7 +24,6 @@ public class GrupoControllerImpl implements GrupoController {
 
 	private GrupoEntryPointMapper grupoEntryPointMapper;
 	private GrupoUseCase grupoUseCase;
-	
 	
 	@Override
 	public ResponseEntity<GrupoResponse> criarGrupo(@Valid GrupoRequest grupoRequest) {
@@ -38,5 +40,13 @@ public class GrupoControllerImpl implements GrupoController {
 		GrupoDataOutput grupoDataOutput = grupoUseCase.buscarGrupoUseCase(idGrupo);
 		GrupoResponse grupoResponse = grupoEntryPointMapper.toGrupoDataOutput(grupoDataOutput);
 		return new ResponseEntity<GrupoResponse>(grupoResponse, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<GrupoPorPessoaResponse>> buscarGruposPorPessoa(Long idPessoa) {
+
+		List<GrupoDataOutput> gruposDataOutput = grupoUseCase.buscarGruposPorPessoaUseCase(idPessoa);
+		List<GrupoPorPessoaResponse> gruposResponse = grupoEntryPointMapper.toGruposDataOutput(gruposDataOutput);
+		return new ResponseEntity<List<GrupoPorPessoaResponse>>(gruposResponse, HttpStatus.OK);
 	}
 }

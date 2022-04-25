@@ -52,4 +52,11 @@ public class GrupoUseCaseImpl implements GrupoUseCase {
 		GrupoModel grupoModel = grupoRepository.getById(idGrupo);
 		return grupoUseCaseMapper.toGrupoModel(grupoModel);
 	}
+	
+	@Override
+	public List<GrupoDataOutput> buscarGruposPorPessoaUseCase(Long idPessoa) {
+		
+		List<GrupoModel> gruposModel = grupoRepository.findByPessoasIdPessoa(idPessoa);
+		return grupoUseCaseMapper.toGrupoModel(gruposModel);
+	}
 }
