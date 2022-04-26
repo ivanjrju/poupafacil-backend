@@ -31,6 +31,7 @@ public class DespesaEntryPointMapper {
 				.valor(despesaRequest.getValor())
 				.data(despesaRequest.getData())
 				.parcela(despesaRequest.getParcela())
+				.tag(despesaRequest.getTag())
 				.build();		
 	}
 	
@@ -47,6 +48,7 @@ public class DespesaEntryPointMapper {
 			.data(despesaDataOutput.getData())
 			.parcela(despesaDataOutput.getParcela())
 			.parcelaTotal(despesaDataOutput.getParcelaTotal())
+			.tag(despesaDataOutput.getTag())
 			.build();
 	}
 

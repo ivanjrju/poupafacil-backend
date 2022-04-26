@@ -29,6 +29,7 @@ public class DespesaUseCaseMapper {
 			.data(despesaDataInput.getData())
 			.parcela(despesaDataInput.getParcela())
 			.parcelaTotal(despesaDataInput.getParcela())
+			.tag(despesaDataInput.getTag())
 			.build();
 	}
 	
@@ -45,6 +46,7 @@ public class DespesaUseCaseMapper {
 			.data(despesaModel.getData())
 			.parcela(despesaModel.getParcela())
 			.parcelaTotal(despesaModel.getParcelaTotal())
+			.tag(despesaModel.getTag())
 			.build();
 	}
 

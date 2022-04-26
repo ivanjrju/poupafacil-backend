@@ -22,5 +22,6 @@ public class DespesaDataInput {
 	@Temporal(TemporalType.DATE)
 	private LocalDate data;
 	
-	private Integer parcela;	
+	private Integer parcela;
+	private String tag;
 }

@@ -60,6 +60,9 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 		PessoaModel pessoaModel = pessoaUseCaseMapper.fromPessoaModel(pessoaDataOutput);
 		despesaModel.setProprietarioDespesa(pessoaModel);
 		
+		if(Objects.isNull(despesaDataInput.getTag()))
+			despesaModel.setTag("Outros");
+		
 		String idCorrelacaoParcela = UUID.randomUUID().toString();
 		despesaModel.setIdCorrelacaoParcela(idCorrelacaoParcela);
 		

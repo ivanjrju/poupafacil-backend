@@ -27,4 +27,5 @@ public class DespesaResponse {
 	
 	private Integer parcela;
 	private Integer parcelaTotal;
+	private String tag;
 }

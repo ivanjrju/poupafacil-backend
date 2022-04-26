@@ -32,5 +32,7 @@ public class DespesaRequest {
 	@Temporal(TemporalType.DATE)
 	private LocalDate data;
 	
+	private String tag;
+	
 	
 }

@@ -43,6 +43,7 @@ public class DespesaModel implements Cloneable {
 	private LocalDate data;
 	private Integer parcela;
 	private Integer parcelaTotal;
+	private String tag;
 	
 	@Override
     public DespesaModel clone() throws CloneNotSupportedException {
