@@ -5,8 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import br.com.poupafacil.back.gateway.despesa.model.ConsolidadoTagModel;
 import br.com.poupafacil.back.gateway.despesa.model.DespesaModel;
 import br.com.poupafacil.back.usecase.despesa.data.input.DespesaDataInput;
+import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoTagOutput;
 import br.com.poupafacil.back.usecase.despesa.data.output.DespesaDataOutput;
 import br.com.poupafacil.back.usecase.grupo.mapper.GrupoUseCaseMapper;
 import br.com.poupafacil.back.usecase.pessoa.mapper.PessoaUseCaseMapper;
@@ -53,6 +55,19 @@ public class DespesaUseCaseMapper {
 	public List<DespesaDataOutput> toDespesasModel(List<DespesaModel> despesasModel) {
 		
 		return despesasModel.stream().map(despesaModel -> toDespesaModel(despesaModel)).collect(Collectors.toList());
+	}
+
+	public ConsolidadoTagOutput toConsolidadoTagOutput(ConsolidadoTagModel consolidadoTagModel) {
+		
+		return ConsolidadoTagOutput.builder()
+				.total(consolidadoTagModel.getSum())
+				.tag(consolidadoTagModel.getTag())
+				.build();
+	}
+	
+	public List<ConsolidadoTagOutput> toConsolidadoTagOutput(List<ConsolidadoTagModel> consolidadoTagModel) {
+		
+		return consolidadoTagModel.stream().map(tagResponse -> toConsolidadoTagOutput(tagResponse)).collect(Collectors.toList());
 	}
 	
 }

@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component;
 import br.com.poupafacil.back.entrypoint.despesa.data.request.DespesaRequest;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoEstimativaDespesaResponse;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoMesDespesaResponse;
+import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoTagResponse;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.DespesaResponse;
 import br.com.poupafacil.back.entrypoint.grupo.mapper.GrupoEntryPointMapper;
 import br.com.poupafacil.back.usecase.despesa.data.input.DespesaDataInput;
 import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoMesDespesaDataOutput;
+import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoTagOutput;
 import br.com.poupafacil.back.usecase.despesa.data.output.DespesaDataOutput;
 import lombok.AllArgsConstructor;
 
@@ -84,6 +86,19 @@ public class DespesaEntryPointMapper {
 			List<ConsolidadoMesDespesaDataOutput> consolidadoMesesDespesasDataOutput) {
 		
 		return consolidadoMesesDespesasDataOutput.stream().map(consolidado -> toConsolidadoEstimativaDespesaResponse(consolidado)).collect(Collectors.toList());
+	}
+	
+	public ConsolidadoTagResponse toConsolidadoTagOutput(ConsolidadoTagOutput consolidadoTagOutput) {
+		
+		return ConsolidadoTagResponse.builder()
+				.total(consolidadoTagOutput.getTotal())
+				.tag(consolidadoTagOutput.getTag())
+				.build();
+	}
+	
+	public List<ConsolidadoTagResponse> toConsolidadoTagOutput(List<ConsolidadoTagOutput> consolidadoTagOutput) {
+		
+		return consolidadoTagOutput.stream().map(tagResponse -> toConsolidadoTagOutput(tagResponse)).collect(Collectors.toList());
 	}
 	
 }

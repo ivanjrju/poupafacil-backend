@@ -19,6 +19,7 @@ import br.com.poupafacil.back.commons.enums.Periodo;
 import br.com.poupafacil.back.entrypoint.despesa.data.request.DespesaRequest;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoEstimativaDespesaResponse;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoMesDespesaResponse;
+import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoTagResponse;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.DespesaResponse;
 
 @RestController
@@ -46,6 +47,11 @@ public interface DespesaController {
 	@CrossOrigin
 	@GetMapping("/pessoa/{idPessoa}/estimativas")
 	public ResponseEntity<List<ConsolidadoEstimativaDespesaResponse>> buscarDespesasParaEstimativas(
+			@PathVariable("idPessoa") Long idPessoa);
+	
+	@CrossOrigin
+	@GetMapping("/tags/pessoa/{idPessoa}")
+	public ResponseEntity<List<ConsolidadoTagResponse>> buscarTagsPorDespesas(
 			@PathVariable("idPessoa") Long idPessoa);
 	
 	@CrossOrigin

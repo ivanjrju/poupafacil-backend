@@ -12,11 +12,13 @@ import br.com.poupafacil.back.entrypoint.despesa.DespesaController;
 import br.com.poupafacil.back.entrypoint.despesa.data.request.DespesaRequest;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoEstimativaDespesaResponse;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoMesDespesaResponse;
+import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoTagResponse;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.DespesaResponse;
 import br.com.poupafacil.back.entrypoint.despesa.mapper.DespesaEntryPointMapper;
 import br.com.poupafacil.back.usecase.despesa.DespesaUseCase;
 import br.com.poupafacil.back.usecase.despesa.data.input.DespesaDataInput;
 import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoMesDespesaDataOutput;
+import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoTagOutput;
 import lombok.AllArgsConstructor;
 
 @Component
@@ -76,6 +78,15 @@ public class DespesaControllerImpl implements DespesaController {
 			List<ConsolidadoMesDespesaDataOutput> consolidadoMeses) {
 		return new ResponseEntity<List<ConsolidadoMesDespesaResponse>>(
 				despesaEntryPointMapper.toConsolidadoMesesDespesasDataOutput(consolidadoMeses), 
+				HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<ConsolidadoTagResponse>> buscarTagsPorDespesas(Long idPessoa) {
+
+		List<ConsolidadoTagOutput> consolidadoTagOutput = despesaUseCase.buscarTagsPorDespesasUseCases(idPessoa);
+		return new ResponseEntity<List<ConsolidadoTagResponse>>(
+				despesaEntryPointMapper.toConsolidadoTagOutput(consolidadoTagOutput),
 				HttpStatus.OK);
 	}
 }

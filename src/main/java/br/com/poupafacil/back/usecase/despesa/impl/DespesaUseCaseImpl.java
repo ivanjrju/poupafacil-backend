@@ -18,11 +18,13 @@ import org.springframework.stereotype.Component;
 import br.com.poupafacil.back.commons.enums.Periodo;
 import br.com.poupafacil.back.gateway.despesa.DespesaRepository;
 import br.com.poupafacil.back.gateway.despesa.facade.BuscarDespesasFacade;
+import br.com.poupafacil.back.gateway.despesa.model.ConsolidadoTagModel;
 import br.com.poupafacil.back.gateway.despesa.model.DespesaModel;
 import br.com.poupafacil.back.gateway.pessoa.model.PessoaModel;
 import br.com.poupafacil.back.usecase.despesa.DespesaUseCase;
 import br.com.poupafacil.back.usecase.despesa.data.input.DespesaDataInput;
 import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoMesDespesaDataOutput;
+import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoTagOutput;
 import br.com.poupafacil.back.usecase.despesa.data.output.DespesaDataOutput;
 import br.com.poupafacil.back.usecase.despesa.mapper.DespesaUseCaseMapper;
 import br.com.poupafacil.back.usecase.grupo.GrupoUseCase;
@@ -169,5 +171,12 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 	public void removerDespesasPorIdCorrelacaoUseCase(String idCorrelacao) {
 		
 		despesaRepository.deleteAllByIdCorrelacaoParcela(idCorrelacao);
+	}
+
+	@Override
+	public List<ConsolidadoTagOutput> buscarTagsPorDespesasUseCases(Long idPessoa) {
+		
+		List<ConsolidadoTagModel> consolidadoTagModel = despesaRepository.findByValorGroupByTag(idPessoa);
+		return despesaUseCaseMapper.toConsolidadoTagOutput(consolidadoTagModel);
 	}
 }
