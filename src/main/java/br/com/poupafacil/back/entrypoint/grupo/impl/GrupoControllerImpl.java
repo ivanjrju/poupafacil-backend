@@ -1,8 +1,7 @@
 package br.com.poupafacil.back.entrypoint.grupo.impl;
 
 import java.util.List;
-
-import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,7 @@ import br.com.poupafacil.back.entrypoint.grupo.mapper.GrupoEntryPointMapper;
 import br.com.poupafacil.back.usecase.grupo.GrupoUseCase;
 import br.com.poupafacil.back.usecase.grupo.data.input.GrupoDataInput;
 import br.com.poupafacil.back.usecase.grupo.data.output.GrupoDataOutput;
+import br.com.poupafacil.back.usecase.permissao.PermissaoUseCase;
 import lombok.AllArgsConstructor;
 
 @Component
@@ -25,8 +25,12 @@ public class GrupoControllerImpl implements GrupoController {
 	private GrupoEntryPointMapper grupoEntryPointMapper;
 	private GrupoUseCase grupoUseCase;
 	
+	private PermissaoUseCase permissaoUseCase;
+	
 	@Override
-	public ResponseEntity<GrupoResponse> criarGrupo(@Valid GrupoRequest grupoRequest) {
+	public ResponseEntity<GrupoResponse> criarGrupo(GrupoRequest grupoRequest, String authorization) throws Exception {
+		
+//		permissaoUseCase.permitirAcessoParticipantesGrupo(grupoRequest.getParticipantes(), authorization);
 		
 		GrupoDataInput grupoDataInput = grupoEntryPointMapper.fromGrupoDataInput(grupoRequest);
 		GrupoResponse grupoResponse = grupoEntryPointMapper.toGrupoDataOutput(
@@ -35,15 +39,23 @@ public class GrupoControllerImpl implements GrupoController {
 	}
 
 	@Override
-	public ResponseEntity<GrupoResponse> buscarGrupo(Long idGrupo) {
+	public ResponseEntity<GrupoResponse> buscarGrupo(Long idGrupo, String authorization) throws Exception {
 		
 		GrupoDataOutput grupoDataOutput = grupoUseCase.buscarGrupoUseCase(idGrupo);
+		
+		List<Long> idPessoas = grupoDataOutput.getPessoas().stream().map(pessoa -> pessoa.getIdPessoa()).collect(Collectors.toList());
+		
+//		permissaoUseCase.permitirAcessoParticipantesGrupo(idPessoas, authorization);
+		
 		GrupoResponse grupoResponse = grupoEntryPointMapper.toGrupoDataOutput(grupoDataOutput);
 		return new ResponseEntity<GrupoResponse>(grupoResponse, HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<List<GrupoPorPessoaResponse>> buscarGruposPorPessoa(Long idPessoa) {
+	public ResponseEntity<List<GrupoPorPessoaResponse>> buscarGruposPorPessoa(Long idPessoa,
+			String authorization) throws Exception {
+		
+//		permissaoUseCase.permitirAcessoPessoa(idPessoa, authorization);
 
 		List<GrupoDataOutput> gruposDataOutput = grupoUseCase.buscarGruposPorPessoaUseCase(idPessoa);
 		List<GrupoPorPessoaResponse> gruposResponse = grupoEntryPointMapper.toGruposDataOutput(gruposDataOutput);

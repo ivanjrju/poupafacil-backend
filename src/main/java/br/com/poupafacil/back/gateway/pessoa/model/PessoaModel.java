@@ -25,10 +25,13 @@ public class PessoaModel {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long idPessoa;
+
+	private String nome;
 	
 	@Column(unique=true)
 	private String email;
 	
-	private String nome;
+	private String senha;
+	
 	private BigDecimal renda;
 }

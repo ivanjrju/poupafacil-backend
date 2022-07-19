@@ -19,6 +19,7 @@ import br.com.poupafacil.back.usecase.despesa.DespesaUseCase;
 import br.com.poupafacil.back.usecase.despesa.data.input.DespesaDataInput;
 import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoMesDespesaDataOutput;
 import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoTagOutput;
+import br.com.poupafacil.back.usecase.permissao.PermissaoUseCase;
 import lombok.AllArgsConstructor;
 
 @Component
@@ -27,10 +28,17 @@ public class DespesaControllerImpl implements DespesaController {
 
 	private DespesaEntryPointMapper despesaEntryPointMapper;
 	private DespesaUseCase despesaUseCase;
+	
+	private PermissaoUseCase permissaoUseCase;
 
 	@Override
-	public ResponseEntity<List<DespesaResponse>> criarDespesa(DespesaRequest despesaRequest) throws CloneNotSupportedException {
+	public ResponseEntity<List<DespesaResponse>> criarDespesa(DespesaRequest despesaRequest, String authorization) throws Exception {
 
+//		if(Objects.nonNull(despesaRequest.getIdGrupo()))
+//			permissaoUseCase.permitirAcessoGrupo(despesaRequest.getProprietarioDespesa(), despesaRequest.getIdGrupo(), authorization);
+//		else
+//			permissaoUseCase.permitirAcessoPessoa(despesaRequest.getProprietarioDespesa(), authorization);
+		
 		DespesaDataInput despesaDataInput = despesaEntryPointMapper.fromDespesaUseCaseInput(despesaRequest);
 		List<DespesaResponse> despesasResponse = despesaEntryPointMapper.toDespesasUseCaseOutput(
 				despesaUseCase.criarDespesaUseCase(despesaDataInput));

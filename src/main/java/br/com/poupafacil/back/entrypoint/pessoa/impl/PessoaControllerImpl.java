@@ -1,5 +1,7 @@
 package br.com.poupafacil.back.entrypoint.pessoa.impl;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -8,6 +10,7 @@ import br.com.poupafacil.back.entrypoint.pessoa.PessoaController;
 import br.com.poupafacil.back.entrypoint.pessoa.data.request.PessoaRequest;
 import br.com.poupafacil.back.entrypoint.pessoa.data.response.PessoaResponse;
 import br.com.poupafacil.back.entrypoint.pessoa.mapper.PessoaEntryPointMapper;
+import br.com.poupafacil.back.usecase.permissao.PermissaoUseCase;
 import br.com.poupafacil.back.usecase.pessoa.PessoaUseCase;
 import br.com.poupafacil.back.usecase.pessoa.data.input.PessoaDataInput;
 import br.com.poupafacil.back.usecase.pessoa.data.output.PessoaDataOutput;
@@ -20,6 +23,8 @@ public class PessoaControllerImpl implements PessoaController {
 	private PessoaEntryPointMapper pessoaEntryPointMapper;
 	private PessoaUseCase pessoaUseCase;
 	
+	private PermissaoUseCase permissaoUseCase;
+	
 	@Override
 	public ResponseEntity<PessoaResponse> criarPessoa(PessoaRequest pessoaRequest) {
 		
@@ -30,7 +35,11 @@ public class PessoaControllerImpl implements PessoaController {
 	}
 
 	@Override
-	public ResponseEntity<PessoaResponse> buscarPessoa(Long idPessoa) {
+	public ResponseEntity<PessoaResponse> buscarPessoa(Long idPessoa, String authorization, HttpServletRequest request) throws Exception {
+				
+		System.out.println(request.getAttribute("teste"));
+		
+//		permissaoUseCase.permitirAcessoPessoa(idPessoa, authorization);
 		
 		PessoaDataOutput pessoaDataOutput = pessoaUseCase.buscarPessoaUseCase(idPessoa);
 		PessoaResponse pessoaResponse = pessoaEntryPointMapper.toPessoaResponse(pessoaDataOutput);

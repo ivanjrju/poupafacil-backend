@@ -1,7 +1,9 @@
 package br.com.poupafacil.back.usecase.pessoa.data.output;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import br.com.poupafacil.back.usecase.grupo.data.output.GrupoDataOutput;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,4 +15,5 @@ public class PessoaDataOutput {
 	private String email;
 	private String nome;
 	private BigDecimal renda;
+	private List<GrupoDataOutput> grupos;
 }

@@ -16,42 +16,41 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class HandlerControllerException {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<BaseException> handleMethodArgumentNotValidException(
-	  MethodArgumentNotValidException ex) {
-		
-		List<String> detalhes = ex.getBindingResult().getAllErrors().stream()
-				.map(error -> error.getDefaultMessage())
+	public ResponseEntity<BaseResponseException> handleMethodArgumentNotValidException(
+			MethodArgumentNotValidException ex) {
+
+		List<String> detalhes = ex.getBindingResult().getAllErrors().stream().map(error -> error.getDefaultMessage())
 				.collect(Collectors.toList());
-		
-		return new ResponseEntity<BaseException>(BaseException.builder()
-	    		.mensagem("Erro no contrato")
-	    		.detalhes(detalhes)
-	    		.data(LocalDate.now())
-	    		.build(),
-	    		HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity<BaseResponseException>(
+				new BaseResponseException("Erro no contrato", detalhes, LocalDate.now()), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<BaseException> handleEntityNotFoundException(
-			EntityNotFoundException ex) {
-		
-		return new ResponseEntity<BaseException>(BaseException.builder()
-				.mensagem("Entidade não encontrada")
-				.detalhes(null)
-				.data(LocalDate.now())
-				.build(),
-				HttpStatus.NOT_FOUND);
+	public ResponseEntity<BaseResponseException> handleEntityNotFoundException(EntityNotFoundException ex) {
+
+		return new ResponseEntity<BaseResponseException>(
+				new BaseResponseException("Entidade não encontrada", null, LocalDate.now()), HttpStatus.NOT_FOUND);
 	}
-	
+
+	@ExceptionHandler(PermissaoException.class)
+	public ResponseEntity<BaseResponseException> handlePermissaoException(PermissaoException ex) {
+
+		return new ResponseEntity<BaseResponseException>(
+				new BaseResponseException(ex.getMensagem(), null, LocalDate.now()), HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<BaseResponseException> handleAuthorizationException(AuthorizationException ex) {
+
+		return new ResponseEntity<BaseResponseException>(
+				new BaseResponseException(ex.getMensagem(), null, LocalDate.now()), HttpStatus.UNAUTHORIZED);
+	}
+
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<BaseException> handleEntityNotFoundException(
-			Exception ex) {
-		
-		return new ResponseEntity<BaseException>(BaseException.builder()
-				.mensagem("Erro interno")
-				.detalhes(null)
-				.data(LocalDate.now())
-				.build(),
-				HttpStatus.NOT_FOUND);
+	public ResponseEntity<BaseResponseException> handleEntityNotFoundException(Exception ex) {
+
+		return new ResponseEntity<BaseResponseException>(
+				new BaseResponseException("Erro interno", null, LocalDate.now()), HttpStatus.NOT_FOUND);
 	}
 }

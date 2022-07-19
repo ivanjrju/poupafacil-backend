@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,15 +25,18 @@ public interface GrupoController {
 	@CrossOrigin
 	@PostMapping
 	public ResponseEntity<GrupoResponse> criarGrupo(
-			@RequestBody @Valid GrupoRequest grupoRequest);
+			@RequestBody @Valid GrupoRequest grupoRequest,
+			@RequestHeader("Authorization") String authorization) throws Exception;
 	
 	@CrossOrigin
 	@GetMapping("/{idGrupo}")
 	public ResponseEntity<GrupoResponse> buscarGrupo(
-			@PathVariable("idGrupo") Long idGrupo);
+			@PathVariable("idGrupo") Long idGrupo,
+			@RequestHeader("Authorization") String authorization) throws Exception;
 	
 	@CrossOrigin
 	@GetMapping("/pessoa/{idPessoa}")
 	public ResponseEntity<List<GrupoPorPessoaResponse>> buscarGruposPorPessoa(
-			@PathVariable("idPessoa") Long idPessoa);
+			@PathVariable("idPessoa") Long idPessoa,
+			@RequestHeader("Authorization") String authorization) throws Exception;
 }

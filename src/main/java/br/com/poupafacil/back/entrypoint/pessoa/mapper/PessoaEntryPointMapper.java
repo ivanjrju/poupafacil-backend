@@ -18,6 +18,7 @@ public class PessoaEntryPointMapper {
 		return PessoaDataInput.builder()
 				.nome(pessoaRequest.getNome())
 				.email(pessoaRequest.getEmail())
+				.senha(pessoaRequest.getSenha())
 				.renda(pessoaRequest.getRenda())
 				.build();
 	}

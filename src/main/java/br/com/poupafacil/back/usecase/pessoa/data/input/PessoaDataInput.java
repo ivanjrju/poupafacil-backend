@@ -9,7 +9,8 @@ import lombok.Data;
 @Builder
 public class PessoaDataInput {
 
-	private String email;
 	private String nome;
+	private String email;
+	private String senha;
 	private BigDecimal renda;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +30,8 @@ public interface DespesaController {
 	@CrossOrigin
 	@PostMapping
 	public ResponseEntity<List<DespesaResponse>> criarDespesa(
-			@RequestBody @Valid DespesaRequest despesaRequest) throws CloneNotSupportedException;
+			@RequestBody @Valid DespesaRequest despesaRequest,
+			@RequestHeader("Authorization") String authorization) throws Exception;
 	
 	@CrossOrigin
 	@GetMapping("/grupo/{idGrupo}")

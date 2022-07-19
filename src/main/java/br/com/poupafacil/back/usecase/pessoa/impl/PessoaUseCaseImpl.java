@@ -1,5 +1,6 @@
 package br.com.poupafacil.back.usecase.pessoa.impl;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import br.com.poupafacil.back.gateway.pessoa.PessoaRepository;
@@ -17,10 +18,15 @@ public class PessoaUseCaseImpl implements PessoaUseCase {
 	private PessoaUseCaseMapper pessoaUseCaseMapper;
 	private PessoaRepository pessoaRepository;
 	
+	private BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
 	@Override
 	public PessoaDataOutput criarPessoaUseCase(PessoaDataInput pessoaDataInput) {
 		
 		PessoaModel pessoaModel = pessoaUseCaseMapper.fromPessoaModel(pessoaDataInput);
+		pessoaModel.setSenha(passwordEncoder().encode(pessoaModel.getSenha()));
 		return pessoaUseCaseMapper.toPessoaModel(pessoaRepository.save(pessoaModel));
 	}
 

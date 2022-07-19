@@ -15,8 +15,9 @@ public class PessoaUseCaseMapper {
 	public PessoaModel fromPessoaModel(PessoaDataInput pessoaDataInput) {
 		
 		return PessoaModel.builder()
-				.email(pessoaDataInput.getEmail())
 				.nome(pessoaDataInput.getNome())
+				.email(pessoaDataInput.getEmail())
+				.senha(pessoaDataInput.getSenha())
 				.renda(pessoaDataInput.getRenda())
 				.build();
 	}

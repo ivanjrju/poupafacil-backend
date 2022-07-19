@@ -15,6 +15,9 @@ public class PessoaRequest {
 
 	@NotEmpty(message = "'email' é obrigatório")
 	private String email;
+	
+	@NotEmpty(message = "'senha' é obrigatório")
+	private String senha;
 
 	@NotNull(message = "'renda' é obrigatório")
 	private BigDecimal renda;
