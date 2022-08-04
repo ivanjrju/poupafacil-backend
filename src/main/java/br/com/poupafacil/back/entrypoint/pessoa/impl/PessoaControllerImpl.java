@@ -6,11 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import br.com.poupafacil.back.entrypoint.pessoa.PessoaController;
 import br.com.poupafacil.back.entrypoint.pessoa.data.request.PessoaRequest;
 import br.com.poupafacil.back.entrypoint.pessoa.data.response.PessoaResponse;
 import br.com.poupafacil.back.entrypoint.pessoa.mapper.PessoaEntryPointMapper;
-import br.com.poupafacil.back.usecase.permissao.PermissaoUseCase;
 import br.com.poupafacil.back.usecase.pessoa.PessoaUseCase;
 import br.com.poupafacil.back.usecase.pessoa.data.input.PessoaDataInput;
 import br.com.poupafacil.back.usecase.pessoa.data.output.PessoaDataOutput;
@@ -23,10 +24,11 @@ public class PessoaControllerImpl implements PessoaController {
 	private PessoaEntryPointMapper pessoaEntryPointMapper;
 	private PessoaUseCase pessoaUseCase;
 	
-	private PermissaoUseCase permissaoUseCase;
+	private ObjectMapper mapper;
 	
 	@Override
-	public ResponseEntity<PessoaResponse> criarPessoa(PessoaRequest pessoaRequest) {
+	public ResponseEntity<PessoaResponse> criarPessoa(
+			PessoaRequest pessoaRequest) {
 		
 		PessoaDataInput pessoaDataInput = pessoaEntryPointMapper.fromPessoaDataInput(pessoaRequest);
 		PessoaResponse pessoaResponse = pessoaEntryPointMapper.toPessoaResponse(
@@ -35,13 +37,11 @@ public class PessoaControllerImpl implements PessoaController {
 	}
 
 	@Override
-	public ResponseEntity<PessoaResponse> buscarPessoa(Long idPessoa, String authorization, HttpServletRequest request) throws Exception {
+	public ResponseEntity<PessoaResponse> buscarPessoa(
+			HttpServletRequest request) throws Exception {
 				
-		System.out.println(request.getAttribute("teste"));
+		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
 		
-//		permissaoUseCase.permitirAcessoPessoa(idPessoa, authorization);
-		
-		PessoaDataOutput pessoaDataOutput = pessoaUseCase.buscarPessoaUseCase(idPessoa);
 		PessoaResponse pessoaResponse = pessoaEntryPointMapper.toPessoaResponse(pessoaDataOutput);
 		return new ResponseEntity<PessoaResponse>(pessoaResponse, HttpStatus.OK);
 	}

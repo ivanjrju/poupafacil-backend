@@ -2,6 +2,7 @@ package br.com.poupafacil.back.configs;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,20 +32,20 @@ public class JwtValidarFilter extends BasicAuthenticationFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-
+		
 		String atributo = request.getHeader(HEADER_ATRIBUTO);
 
-        if (atributo == null) {
-            chain.doFilter(request, response);
-            throw new AuthorizationException("Authorization nao informado.");
-        }
-
-        if (!atributo.startsWith(ATRIBUTO_PREFIXO)) {
+		if (Objects.nonNull(atributo) && !atributo.startsWith(ATRIBUTO_PREFIXO)) {
             chain.doFilter(request, response);
             throw new AuthorizationException("Authorization nao contem o Bearer.");
         }
 		
-        String token = atributo.replace(ATRIBUTO_PREFIXO, "");
+		if (Objects.isNull(atributo)) {
+			chain.doFilter(request, response);
+			return;
+		}
+		
+		String token = atributo.replace(ATRIBUTO_PREFIXO, "");
 		UsernamePasswordAuthenticationToken authenticationToken = getAuthenticatioToken(token);
 		
 		SecurityContextHolder.getContext().setAuthentication(authenticationToken);

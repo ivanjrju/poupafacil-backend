@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import lombok.RequiredArgsConstructor;
 
+@SuppressWarnings("deprecation")
 @RequiredArgsConstructor
 @Component
 public class ConfigInterceptor extends WebMvcConfigurerAdapter  {

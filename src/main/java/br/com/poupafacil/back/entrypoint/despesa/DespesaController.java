@@ -2,6 +2,7 @@ package br.com.poupafacil.back.entrypoint.despesa;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.com.poupafacil.back.commons.enums.Periodo;
 import br.com.poupafacil.back.entrypoint.despesa.data.request.DespesaRequest;
@@ -31,33 +34,35 @@ public interface DespesaController {
 	@PostMapping
 	public ResponseEntity<List<DespesaResponse>> criarDespesa(
 			@RequestBody @Valid DespesaRequest despesaRequest,
-			@RequestHeader("Authorization") String authorization) throws Exception;
-	
+			HttpServletRequest request) throws Exception;
+
 	@CrossOrigin
 	@GetMapping("/grupo/{idGrupo}")
 	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorGrupo(
 			@PathVariable("idGrupo") Long idGrupo,
-			@PathParam("periodo") Periodo periodo);
+			@PathParam("periodo") Periodo periodo,
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
 
 	@CrossOrigin
-	@GetMapping("/pessoa/{idPessoa}")
+	@GetMapping("/pessoa")
 	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorPessoa(
-			@PathVariable("idPessoa") Long idPessoa,
 			@PathParam("periodo") Periodo periodo,
-			@PathParam("idGrupo") Long idGrupo);
+			@PathParam("idGrupo") Long idGrupo,
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
 	
 	@CrossOrigin
-	@GetMapping("/pessoa/{idPessoa}/estimativas")
+	@GetMapping("/pessoa/estimativas")
 	public ResponseEntity<List<ConsolidadoEstimativaDespesaResponse>> buscarDespesasParaEstimativas(
-			@PathVariable("idPessoa") Long idPessoa);
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
 	
 	@CrossOrigin
-	@GetMapping("/tags/pessoa/{idPessoa}")
+	@GetMapping("/tags/pessoa")
 	public ResponseEntity<List<ConsolidadoTagResponse>> buscarTagsPorDespesas(
-			@PathVariable("idPessoa") Long idPessoa);
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
 	
 	@CrossOrigin
 	@DeleteMapping("/idCorrelacao/{idCorrelacao}")
 	public ResponseEntity<String> removerDespesasPorIdCorrelacao(
-			@PathVariable("idCorrelacao") String idCorrelacao);
+			@PathVariable("idCorrelacao") String idCorrelacao,
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
 }

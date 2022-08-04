@@ -3,9 +3,15 @@ package br.com.poupafacil.back.entrypoint.despesa.impl;
 import java.util.List;
 import java.util.Objects;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.poupafacil.back.commons.enums.Periodo;
 import br.com.poupafacil.back.entrypoint.despesa.DespesaController;
@@ -19,7 +25,7 @@ import br.com.poupafacil.back.usecase.despesa.DespesaUseCase;
 import br.com.poupafacil.back.usecase.despesa.data.input.DespesaDataInput;
 import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoMesDespesaDataOutput;
 import br.com.poupafacil.back.usecase.despesa.data.output.ConsolidadoTagOutput;
-import br.com.poupafacil.back.usecase.permissao.PermissaoUseCase;
+import br.com.poupafacil.back.usecase.pessoa.data.output.PessoaDataOutput;
 import lombok.AllArgsConstructor;
 
 @Component
@@ -28,73 +34,93 @@ public class DespesaControllerImpl implements DespesaController {
 
 	private DespesaEntryPointMapper despesaEntryPointMapper;
 	private DespesaUseCase despesaUseCase;
-	
-	private PermissaoUseCase permissaoUseCase;
+
+	private ObjectMapper mapper;
 
 	@Override
-	public ResponseEntity<List<DespesaResponse>> criarDespesa(DespesaRequest despesaRequest, String authorization) throws Exception {
+	public ResponseEntity<List<DespesaResponse>> criarDespesa(
+			DespesaRequest despesaRequest,
+			HttpServletRequest request) throws Exception {
 
-//		if(Objects.nonNull(despesaRequest.getIdGrupo()))
-//			permissaoUseCase.permitirAcessoGrupo(despesaRequest.getProprietarioDespesa(), despesaRequest.getIdGrupo(), authorization);
-//		else
-//			permissaoUseCase.permitirAcessoPessoa(despesaRequest.getProprietarioDespesa(), authorization);
-		
+		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(),
+				PessoaDataOutput.class);
+
 		DespesaDataInput despesaDataInput = despesaEntryPointMapper.fromDespesaUseCaseInput(despesaRequest);
-		List<DespesaResponse> despesasResponse = despesaEntryPointMapper.toDespesasUseCaseOutput(
-				despesaUseCase.criarDespesaUseCase(despesaDataInput));
-		
+		List<DespesaResponse> despesasResponse = despesaEntryPointMapper
+				.toDespesasUseCaseOutput(despesaUseCase.criarDespesaUseCase(despesaDataInput, pessoaDataOutput));
+
 		return new ResponseEntity<List<DespesaResponse>>(despesasResponse, HttpStatus.CREATED);
 	}
 
 	@Override
-	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorGrupo(Long idGrupo, Periodo periodo) {
-		
+	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorGrupo(
+			Long idGrupo,
+			Periodo periodo,
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+
+		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(),
+				PessoaDataOutput.class);
+
 		periodo = validarPeriodo(periodo);
-		return consolidadosMesesDespesasResponse(despesaUseCase.buscarDespesasPorGrupoUseCases(idGrupo, periodo));
+		return consolidadosMesesDespesasResponse(
+				despesaUseCase.buscarDespesasPorGrupoUseCases(idGrupo, periodo, pessoaDataOutput));
 	}
 
 	@Override
-	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorPessoa(Long idPessoa, Periodo periodo, Long idGrupo) {
+	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorPessoa(
+			Periodo periodo,
+			Long idGrupo,
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+
+		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
 		
 		periodo = validarPeriodo(periodo);
-		return consolidadosMesesDespesasResponse(despesaUseCase.buscarDespesasPorPessoaUseCases(idPessoa, periodo, idGrupo));
+		return consolidadosMesesDespesasResponse(
+				despesaUseCase.buscarDespesasPorPessoaUseCases(pessoaDataOutput.getIdPessoa(), periodo, idGrupo));
 	}
 
 	@Override
-	public ResponseEntity<List<ConsolidadoEstimativaDespesaResponse>> buscarDespesasParaEstimativas(Long idPessoa) {
+	public ResponseEntity<List<ConsolidadoEstimativaDespesaResponse>> buscarDespesasParaEstimativas(
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+
+		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
 		
-		List<ConsolidadoMesDespesaDataOutput> consolidadoMeses = despesaUseCase.buscarDespesasParaEstimativasUseCases(idPessoa);
+		List<ConsolidadoMesDespesaDataOutput> consolidadoMeses = despesaUseCase
+				.buscarDespesasParaEstimativasUseCases(pessoaDataOutput.getIdPessoa());
 		return new ResponseEntity<List<ConsolidadoEstimativaDespesaResponse>>(
-				despesaEntryPointMapper.toConsolidadoEstimativasDespesaResponse(consolidadoMeses), 
-				HttpStatus.OK);
+				despesaEntryPointMapper.toConsolidadoEstimativasDespesaResponse(consolidadoMeses), HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<String> removerDespesasPorIdCorrelacao(String idCorrelacao) {
+	public ResponseEntity<List<ConsolidadoTagResponse>> buscarTagsPorDespesas(
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+
+		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+		
+		List<ConsolidadoTagOutput> consolidadoTagOutput = despesaUseCase.buscarTagsPorDespesasUseCases(pessoaDataOutput.getIdPessoa());
+		return new ResponseEntity<List<ConsolidadoTagResponse>>(
+				despesaEntryPointMapper.toConsolidadoTagOutput(consolidadoTagOutput), HttpStatus.OK);
+	}
 	
-		despesaUseCase.removerDespesasPorIdCorrelacaoUseCase(idCorrelacao);
+	@Override
+	public ResponseEntity<String> removerDespesasPorIdCorrelacao(
+			String idCorrelacao,
+			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+	
+		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+
+		despesaUseCase.removerDespesasPorIdCorrelacaoUseCase(idCorrelacao, pessoaDataOutput);
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
-	
 	private Periodo validarPeriodo(Periodo periodo) {
-		if(Objects.isNull(periodo))
+		if (Objects.isNull(periodo))
 			return Periodo.MENSAL;
 		return periodo;
 	}
-	
+
 	private ResponseEntity<List<ConsolidadoMesDespesaResponse>> consolidadosMesesDespesasResponse(
 			List<ConsolidadoMesDespesaDataOutput> consolidadoMeses) {
 		return new ResponseEntity<List<ConsolidadoMesDespesaResponse>>(
-				despesaEntryPointMapper.toConsolidadoMesesDespesasDataOutput(consolidadoMeses), 
-				HttpStatus.OK);
-	}
-
-	@Override
-	public ResponseEntity<List<ConsolidadoTagResponse>> buscarTagsPorDespesas(Long idPessoa) {
-
-		List<ConsolidadoTagOutput> consolidadoTagOutput = despesaUseCase.buscarTagsPorDespesasUseCases(idPessoa);
-		return new ResponseEntity<List<ConsolidadoTagResponse>>(
-				despesaEntryPointMapper.toConsolidadoTagOutput(consolidadoTagOutput),
-				HttpStatus.OK);
+				despesaEntryPointMapper.toConsolidadoMesesDespesasDataOutput(consolidadoMeses), HttpStatus.OK);
 	}
 }

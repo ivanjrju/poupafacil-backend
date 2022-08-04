@@ -30,7 +30,6 @@ import br.com.poupafacil.back.usecase.despesa.mapper.DespesaUseCaseMapper;
 import br.com.poupafacil.back.usecase.grupo.GrupoUseCase;
 import br.com.poupafacil.back.usecase.grupo.data.output.GrupoDataOutput;
 import br.com.poupafacil.back.usecase.grupo.mapper.GrupoUseCaseMapper;
-import br.com.poupafacil.back.usecase.pessoa.PessoaUseCase;
 import br.com.poupafacil.back.usecase.pessoa.data.output.PessoaDataOutput;
 import br.com.poupafacil.back.usecase.pessoa.mapper.PessoaUseCaseMapper;
 import lombok.AllArgsConstructor;
@@ -46,7 +45,6 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 	private GrupoUseCase grupoUseCase;
 	private GrupoUseCaseMapper grupoUseCaseMapper;
 	
-	private PessoaUseCase pessoaUseCase;
 	private PessoaUseCaseMapper pessoaUseCaseMapper;
 	
 	private BuscarDespesasFacade buscarDespesasFacade;
@@ -54,13 +52,26 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 	
 	@Override
 	@Transient
-	public List<DespesaDataOutput> criarDespesaUseCase(DespesaDataInput despesaDataInput) throws CloneNotSupportedException {
+	public List<DespesaDataOutput> criarDespesaUseCase(DespesaDataInput despesaDataInput, PessoaDataOutput pessoaDataOutput) throws CloneNotSupportedException {
 		
 		DespesaModel despesaModel = despesaUseCaseMapper.fromDespesaModel(despesaDataInput);
 		
-		PessoaDataOutput pessoaDataOutput = pessoaUseCase.buscarPessoaUseCase(despesaDataInput.getProprietarioDespesa());
 		PessoaModel pessoaModel = pessoaUseCaseMapper.fromPessoaModel(pessoaDataOutput);
 		despesaModel.setProprietarioDespesa(pessoaModel);
+		
+		int quantidadePessoa = 1;
+		
+		if(Objects.nonNull(despesaDataInput.getGrupo())){
+			List<GrupoDataOutput> gruposDataOutput = grupoUseCase.buscarGruposPorPessoaUseCase(pessoaModel.getIdPessoa());
+			
+			GrupoDataOutput grupoDataOutput = gruposDataOutput.stream()
+				.filter(grupoDataOut -> grupoDataOut.getIdGrupo() == despesaDataInput.getGrupo())
+				.findFirst()
+				.orElseThrow();
+			
+			despesaModel.setGrupo(grupoUseCaseMapper.toGrupoDataOutput(grupoDataOutput));
+			quantidadePessoa = grupoDataOutput.getPessoas().size();
+		}
 		
 		if(Objects.isNull(despesaDataInput.getTag()))
 			despesaModel.setTag("Outros");
@@ -68,25 +79,11 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 		String idCorrelacaoParcela = UUID.randomUUID().toString();
 		despesaModel.setIdCorrelacaoParcela(idCorrelacaoParcela);
 		
-		int quantidadePessoa = buscarGrupoParaDespesa(despesaDataInput, despesaModel);
-
 		List<DespesaModel> despesasModelParcelado = efetuarParcelamento(despesaDataInput, despesaModel, quantidadePessoa);
 	
 		return despesaUseCaseMapper.toDespesasModel(despesaRepository.saveAllAndFlush(despesasModelParcelado));
  	}
 
-	@Transient
-	private int buscarGrupoParaDespesa(DespesaDataInput despesaDataInput, DespesaModel despesaModel) {
-
-		if(Objects.isNull(despesaDataInput.getGrupo()))
-			return 1;
-		
-		GrupoDataOutput grupoDataOutput = grupoUseCase.buscarGrupoUseCase(despesaDataInput.getGrupo());
-		despesaModel.setGrupo(grupoUseCaseMapper.toGrupoDataOutput(grupoDataOutput));
-		
-		return grupoDataOutput.getPessoas().size();
-	}
-	
 	private List<DespesaModel> efetuarParcelamento(DespesaDataInput despesaDataInput, DespesaModel despesaModel, int quantidadePessoa)
 			throws CloneNotSupportedException {
 	
@@ -111,8 +108,13 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 	}
 
 	@Override
-	public List<ConsolidadoMesDespesaDataOutput> buscarDespesasPorGrupoUseCases(Long idGrupo, Periodo periodo) {
+	public List<ConsolidadoMesDespesaDataOutput> buscarDespesasPorGrupoUseCases(Long idGrupo, Periodo periodo, PessoaDataOutput pessoaDataOutput) {
 
+		grupoUseCase.buscarGrupoUseCase(idGrupo).getPessoas().stream()
+			.filter(pessoa -> pessoa.getIdPessoa() == pessoaDataOutput.getIdPessoa())
+			.findFirst()
+			.orElseThrow();
+		
 		List<DespesaModel> despesasModel = buscarDespesasFacade.porGrupo(idGrupo, periodo);
 		HashSet<String> anoMes = buscarMesesNaDespesas(despesasModel);
 		return consolidarDespesasPorMes(despesasModel, anoMes);
@@ -120,6 +122,8 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 	
 	@Override
 	public List<ConsolidadoMesDespesaDataOutput> buscarDespesasPorPessoaUseCases(Long idPessoa, Periodo periodo, Long idGrupo) {
+		
+		
 		
 		List<DespesaModel> despesasModel = buscarDespesasFacade.porPessoa(idPessoa, periodo, idGrupo);
 		HashSet<String> anoMes = buscarMesesNaDespesas(despesasModel);
@@ -166,17 +170,24 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 		}
 		return anoMes;
 	}
-	
-	@Override
-	public void removerDespesasPorIdCorrelacaoUseCase(String idCorrelacao) {
-		
-		despesaRepository.deleteAllByIdCorrelacaoParcela(idCorrelacao);
-	}
 
 	@Override
 	public List<ConsolidadoTagOutput> buscarTagsPorDespesasUseCases(Long idPessoa) {
 		
 		List<ConsolidadoTagModel> consolidadoTagModel = despesaRepository.findByValorGroupByTag(idPessoa);
 		return despesaUseCaseMapper.toConsolidadoTagOutput(consolidadoTagModel);
+	}
+	
+	@Override
+	public void removerDespesasPorIdCorrelacaoUseCase(String idCorrelacao, PessoaDataOutput pessoaDataOutput) {
+		
+		List<DespesaModel> despesasModel = despesaRepository.findAllByIdCorrelacaoParcela(idCorrelacao);
+		
+		despesasModel.stream()
+			.filter(despesaModel -> despesaModel.getProprietarioDespesa().getIdPessoa() == pessoaDataOutput.getIdPessoa())
+			.findFirst()
+			.orElseThrow();
+		
+		despesaRepository.deleteAllByIdCorrelacaoParcela(idCorrelacao);
 	}
 }

@@ -48,9 +48,16 @@ public class HandlerControllerException {
 	}
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<BaseResponseException> handleEntityNotFoundException(Exception ex) {
+	public ResponseEntity<BaseResponseException> handleException(Exception ex) {
 
 		return new ResponseEntity<BaseResponseException>(
 				new BaseResponseException("Erro interno", null, LocalDate.now()), HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<BaseResponseException> handlerRuntimeException(RuntimeException ex) {
+		
+		return new ResponseEntity<BaseResponseException>(
+				new BaseResponseException(ex.getMessage(), null, LocalDate.now()), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

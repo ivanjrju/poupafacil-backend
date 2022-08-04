@@ -18,6 +18,7 @@ public interface DespesaRepository extends JpaRepository<DespesaModel, Long>{
 	List<DespesaModel> findByProprietarioDespesaIdPessoaAndDataBetweenOrderByData(Long idPessoa, LocalDate to, LocalDate from);	
 	List<DespesaModel> findByGrupoIdGrupoAndProprietarioDespesaIdPessoaAndDataBetweenOrderByData(Long idGrupo, Long idPessoa, LocalDate to, LocalDate from);
 	
+	List<DespesaModel> findAllByIdCorrelacaoParcela(String idCorrelacao);
 	void deleteAllByIdCorrelacaoParcela(String idCorrelacao);
 	
 	@Query("SELECT new br.com.poupafacil.back.gateway.despesa.model.ConsolidadoTagModel(SUM(d.valorDespesa), d.tag) FROM DespesaModel d WHERE d.proprietarioDespesa.idPessoa = ?1 GROUP BY d.tag")
