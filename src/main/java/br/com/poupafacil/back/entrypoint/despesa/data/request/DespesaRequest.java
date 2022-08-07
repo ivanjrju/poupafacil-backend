@@ -19,9 +19,6 @@ public class DespesaRequest {
 	
 	private Long idGrupo;
 	
-	@NotNull(message = "'proprietarioDespesa' é obrigatório")
-	private Long proprietarioDespesa;
-	
 	@NotNull(message = "'valor' é obrigatório")
 	private BigDecimal valor;
 	

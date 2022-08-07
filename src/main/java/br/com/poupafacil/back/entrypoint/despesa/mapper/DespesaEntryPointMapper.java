@@ -28,7 +28,6 @@ public class DespesaEntryPointMapper {
 		
 		return DespesaDataInput.builder()
 				.nomeDespesa(despesaRequest.getNomeDespesa())
-				.proprietarioDespesa(despesaRequest.getProprietarioDespesa())
 				.grupo(despesaRequest.getIdGrupo())
 				.valor(despesaRequest.getValor())
 				.data(despesaRequest.getData())
