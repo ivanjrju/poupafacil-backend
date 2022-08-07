@@ -64,7 +64,6 @@ public class DespesaControllerImpl implements DespesaController {
 	@Override
 	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorPessoa(
 			Periodo periodo,
-			Long idGrupo,
 			String authorization) throws JsonMappingException, JsonProcessingException {
 
 		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);

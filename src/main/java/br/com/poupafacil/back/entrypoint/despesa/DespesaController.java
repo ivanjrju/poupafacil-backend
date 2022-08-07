@@ -47,7 +47,6 @@ public interface DespesaController {
 	@GetMapping("/pessoa")
 	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorPessoa(
 			@PathParam("periodo") Periodo periodo,
-			@PathParam("idGrupo") Long idGrupo,
 			@RequestHeader("Authorization") String authorization) throws JsonMappingException, JsonProcessingException;
 	
 	@CrossOrigin
