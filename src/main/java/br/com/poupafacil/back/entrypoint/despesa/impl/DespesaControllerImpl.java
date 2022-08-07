@@ -3,17 +3,15 @@ package br.com.poupafacil.back.entrypoint.despesa.impl;
 import java.util.List;
 import java.util.Objects;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.poupafacil.back.commons.enums.Periodo;
+import br.com.poupafacil.back.configs.JwtService;
 import br.com.poupafacil.back.entrypoint.despesa.DespesaController;
 import br.com.poupafacil.back.entrypoint.despesa.data.request.DespesaRequest;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoEstimativaDespesaResponse;
@@ -34,16 +32,14 @@ public class DespesaControllerImpl implements DespesaController {
 
 	private DespesaEntryPointMapper despesaEntryPointMapper;
 	private DespesaUseCase despesaUseCase;
-
-	private ObjectMapper mapper;
+	private JwtService jwtService;
 
 	@Override
 	public ResponseEntity<List<DespesaResponse>> criarDespesa(
 			DespesaRequest despesaRequest,
-			HttpServletRequest request) throws Exception {
+			String authorization) throws Exception {
 
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(),
-				PessoaDataOutput.class);
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 
 		DespesaDataInput despesaDataInput = despesaEntryPointMapper.fromDespesaUseCaseInput(despesaRequest);
 		List<DespesaResponse> despesasResponse = despesaEntryPointMapper
@@ -56,10 +52,9 @@ public class DespesaControllerImpl implements DespesaController {
 	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorGrupo(
 			Long idGrupo,
 			Periodo periodo,
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+			String authorization) throws JsonMappingException, JsonProcessingException {
 
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(),
-				PessoaDataOutput.class);
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 
 		periodo = validarPeriodo(periodo);
 		return consolidadosMesesDespesasResponse(
@@ -70,9 +65,9 @@ public class DespesaControllerImpl implements DespesaController {
 	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorPessoa(
 			Periodo periodo,
 			Long idGrupo,
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+			String authorization) throws JsonMappingException, JsonProcessingException {
 
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 		
 		periodo = validarPeriodo(periodo);
 		return consolidadosMesesDespesasResponse(
@@ -81,9 +76,9 @@ public class DespesaControllerImpl implements DespesaController {
 
 	@Override
 	public ResponseEntity<List<ConsolidadoEstimativaDespesaResponse>> buscarDespesasParaEstimativas(
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+			String authorization) throws JsonMappingException, JsonProcessingException {
 
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 		
 		List<ConsolidadoMesDespesaDataOutput> consolidadoMeses = despesaUseCase
 				.buscarDespesasParaEstimativasUseCases(pessoaDataOutput.getIdPessoa());
@@ -93,9 +88,9 @@ public class DespesaControllerImpl implements DespesaController {
 
 	@Override
 	public ResponseEntity<List<ConsolidadoTagResponse>> buscarTagsPorDespesas(
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+			String authorization) throws JsonMappingException, JsonProcessingException {
 
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 		
 		List<ConsolidadoTagOutput> consolidadoTagOutput = despesaUseCase.buscarTagsPorDespesasUseCases(pessoaDataOutput.getIdPessoa());
 		return new ResponseEntity<List<ConsolidadoTagResponse>>(
@@ -105,9 +100,9 @@ public class DespesaControllerImpl implements DespesaController {
 	@Override
 	public ResponseEntity<String> removerDespesasPorIdCorrelacao(
 			String idCorrelacao,
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+			String authorization) throws JsonMappingException, JsonProcessingException {
 	
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 
 		despesaUseCase.removerDespesasPorIdCorrelacaoUseCase(idCorrelacao, pessoaDataOutput);
 		return new ResponseEntity<String>(HttpStatus.CREATED);

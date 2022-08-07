@@ -2,7 +2,6 @@ package br.com.poupafacil.back.entrypoint.despesa;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,35 +34,35 @@ public interface DespesaController {
 	@PostMapping
 	public ResponseEntity<List<DespesaResponse>> criarDespesa(
 			@RequestBody @Valid DespesaRequest despesaRequest,
-			HttpServletRequest request) throws Exception;
+			@RequestHeader("Authorization") String authorization) throws Exception;
 
 	@CrossOrigin
 	@GetMapping("/grupo/{idGrupo}")
 	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorGrupo(
 			@PathVariable("idGrupo") Long idGrupo,
 			@PathParam("periodo") Periodo periodo,
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
+			@RequestHeader("Authorization") String authorization) throws JsonMappingException, JsonProcessingException;
 
 	@CrossOrigin
 	@GetMapping("/pessoa")
 	public ResponseEntity<List<ConsolidadoMesDespesaResponse>> buscarDespesasPorPessoa(
 			@PathParam("periodo") Periodo periodo,
 			@PathParam("idGrupo") Long idGrupo,
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
+			@RequestHeader("Authorization") String authorization) throws JsonMappingException, JsonProcessingException;
 	
 	@CrossOrigin
 	@GetMapping("/pessoa/estimativas")
 	public ResponseEntity<List<ConsolidadoEstimativaDespesaResponse>> buscarDespesasParaEstimativas(
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
+			@RequestHeader("Authorization") String authorization) throws JsonMappingException, JsonProcessingException;
 	
 	@CrossOrigin
 	@GetMapping("/tags/pessoa")
 	public ResponseEntity<List<ConsolidadoTagResponse>> buscarTagsPorDespesas(
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
+			@RequestHeader("Authorization") String authorization) throws JsonMappingException, JsonProcessingException;
 	
 	@CrossOrigin
-	@DeleteMapping("/idCorrelacao/{idCorrelacao}")
+	@DeleteMapping("/{idCorrelacao}")
 	public ResponseEntity<String> removerDespesasPorIdCorrelacao(
 			@PathVariable("idCorrelacao") String idCorrelacao,
-			HttpServletRequest request) throws JsonMappingException, JsonProcessingException;
+			@RequestHeader("Authorization") String authorization) throws JsonMappingException, JsonProcessingException;
 }

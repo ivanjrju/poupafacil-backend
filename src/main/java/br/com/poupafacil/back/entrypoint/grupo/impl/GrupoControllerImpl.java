@@ -2,14 +2,11 @@ package br.com.poupafacil.back.entrypoint.grupo.impl;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import br.com.poupafacil.back.configs.JwtService;
 import br.com.poupafacil.back.entrypoint.grupo.GrupoController;
 import br.com.poupafacil.back.entrypoint.grupo.data.request.GrupoRequest;
 import br.com.poupafacil.back.entrypoint.grupo.data.response.GrupoPorPessoaResponse;
@@ -27,13 +24,14 @@ public class GrupoControllerImpl implements GrupoController {
 
 	private GrupoEntryPointMapper grupoEntryPointMapper;
 	private GrupoUseCase grupoUseCase;
-	
-	private ObjectMapper mapper;
+	private JwtService jwtService;
 	
 	@Override
-	public ResponseEntity<GrupoResponse> criarGrupo(GrupoRequest grupoRequest, HttpServletRequest request) throws Exception {
+	public ResponseEntity<GrupoResponse> criarGrupo(
+			GrupoRequest grupoRequest,
+			String authorization) throws Exception {
 		
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 		
 		List<Long> participantes = grupoRequest.getParticipantes();
 		if(!participantes.contains(pessoaDataOutput.getIdPessoa())) {
@@ -47,9 +45,11 @@ public class GrupoControllerImpl implements GrupoController {
 	}
 
 	@Override
-	public ResponseEntity<GrupoResponse> buscarGrupo(Long idGrupo, HttpServletRequest request) throws Exception {
+	public ResponseEntity<GrupoResponse> buscarGrupo(
+			Long idGrupo,
+			String authorization) throws Exception {
 				
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 		
 		GrupoDataOutput grupoDataOutput = grupoUseCase.buscarGrupoUseCase(idGrupo);
 		grupoDataOutput.getPessoas().stream()
@@ -63,9 +63,9 @@ public class GrupoControllerImpl implements GrupoController {
 
 	@Override
 	public ResponseEntity<List<GrupoPorPessoaResponse>> buscarGruposPorPessoa(
-			HttpServletRequest request) throws Exception {
+			String authorization) throws Exception {
 		
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 
 		List<GrupoDataOutput> gruposDataOutput = grupoUseCase.buscarGruposPorPessoaUseCase(pessoaDataOutput.getIdPessoa());
 		List<GrupoPorPessoaResponse> gruposResponse = grupoEntryPointMapper.toGruposDataOutput(gruposDataOutput);

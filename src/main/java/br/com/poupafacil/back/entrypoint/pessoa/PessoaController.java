@@ -1,6 +1,5 @@
 package br.com.poupafacil.back.entrypoint.pessoa;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -8,6 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +24,7 @@ public interface PessoaController {
 			@RequestBody @Valid PessoaRequest pessoaRequest);
 	
 	@CrossOrigin
-	@GetMapping("/{idPessoa}")
+	@GetMapping
 	public ResponseEntity<PessoaResponse> buscarPessoa(
-			HttpServletRequest request) throws Exception;
+			@RequestHeader("Authorization") String authorization) throws Exception;
 }

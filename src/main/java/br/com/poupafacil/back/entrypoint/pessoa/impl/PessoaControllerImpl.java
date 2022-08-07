@@ -1,13 +1,10 @@
 package br.com.poupafacil.back.entrypoint.pessoa.impl;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import br.com.poupafacil.back.configs.JwtService;
 import br.com.poupafacil.back.entrypoint.pessoa.PessoaController;
 import br.com.poupafacil.back.entrypoint.pessoa.data.request.PessoaRequest;
 import br.com.poupafacil.back.entrypoint.pessoa.data.response.PessoaResponse;
@@ -23,8 +20,7 @@ public class PessoaControllerImpl implements PessoaController {
 
 	private PessoaEntryPointMapper pessoaEntryPointMapper;
 	private PessoaUseCase pessoaUseCase;
-	
-	private ObjectMapper mapper;
+	private JwtService jwtService;
 	
 	@Override
 	public ResponseEntity<PessoaResponse> criarPessoa(
@@ -37,10 +33,9 @@ public class PessoaControllerImpl implements PessoaController {
 	}
 
 	@Override
-	public ResponseEntity<PessoaResponse> buscarPessoa(
-			HttpServletRequest request) throws Exception {
-				
-		PessoaDataOutput pessoaDataOutput = mapper.readValue(request.getAttribute("pessoa").toString(), PessoaDataOutput.class);
+	public ResponseEntity<PessoaResponse> buscarPessoa(String authorization) throws Exception {			
+		
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 		
 		PessoaResponse pessoaResponse = pessoaEntryPointMapper.toPessoaResponse(pessoaDataOutput);
 		return new ResponseEntity<PessoaResponse>(pessoaResponse, HttpStatus.OK);
