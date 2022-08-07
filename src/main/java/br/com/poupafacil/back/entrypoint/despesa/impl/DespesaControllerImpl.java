@@ -70,7 +70,7 @@ public class DespesaControllerImpl implements DespesaController {
 		
 		periodo = validarPeriodo(periodo);
 		return consolidadosMesesDespesasResponse(
-				despesaUseCase.buscarDespesasPorPessoaUseCases(pessoaDataOutput.getIdPessoa(), periodo, idGrupo));
+				despesaUseCase.buscarDespesasPorPessoaUseCases(pessoaDataOutput.getIdPessoa(), periodo, null));
 	}
 
 	@Override

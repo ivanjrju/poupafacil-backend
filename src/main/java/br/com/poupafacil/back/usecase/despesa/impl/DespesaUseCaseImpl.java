@@ -123,8 +123,6 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 	@Override
 	public List<ConsolidadoMesDespesaDataOutput> buscarDespesasPorPessoaUseCases(Long idPessoa, Periodo periodo, Long idGrupo) {
 		
-		
-		
 		List<DespesaModel> despesasModel = buscarDespesasFacade.porPessoa(idPessoa, periodo, idGrupo);
 		HashSet<String> anoMes = buscarMesesNaDespesas(despesasModel);
 		return consolidarDespesasPorMes(despesasModel, anoMes);
