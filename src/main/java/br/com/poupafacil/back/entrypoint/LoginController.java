@@ -3,6 +3,7 @@ package br.com.poupafacil.back.entrypoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ public class LoginController {
 	private final UsuarioServiceImpl usuarioService;
     private final JwtService jwtService;
 	
+    @CrossOrigin
 	@PostMapping("/login")
     public ResponseEntity<TokenResponse> autenticar(@RequestBody LoginRequest loginRequest){
         try{
