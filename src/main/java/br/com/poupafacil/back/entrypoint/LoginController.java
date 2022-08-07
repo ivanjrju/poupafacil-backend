@@ -26,7 +26,11 @@ public class LoginController {
     @CrossOrigin
 	@PostMapping("/login")
     public ResponseEntity<TokenResponse> autenticar(@RequestBody LoginRequest loginRequest){
-        try{
+        
+    	System.out.println("email: "+loginRequest.getEmail());
+    	System.out.println("senha: "+loginRequest.getSenha());
+    	
+    	try{
             usuarioService.autenticar(loginRequest);
             String token = jwtService.gerarToken(loginRequest);
             return new ResponseEntity<TokenResponse>(TokenResponse.builder().token(token).build(), HttpStatus.OK);
