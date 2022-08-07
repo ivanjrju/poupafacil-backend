@@ -61,7 +61,7 @@ public interface DespesaController {
 			@RequestHeader("Authorization") String authorization) throws JsonMappingException, JsonProcessingException;
 	
 	@CrossOrigin
-	@DeleteMapping("/{idCorrelacao}")
+	@DeleteMapping("/idCorrelacao/{idCorrelacao}")
 	public ResponseEntity<String> removerDespesasPorIdCorrelacao(
 			@PathVariable("idCorrelacao") String idCorrelacao,
 			@RequestHeader("Authorization") String authorization) throws JsonMappingException, JsonProcessingException;

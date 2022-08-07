@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class AmizadeRequest {
 
-	@NotEmpty(message = "'email' é obrigatório")
-	private String email;
+	@NotEmpty(message = "'email solicitado' é obrigatório")
+	private String emailSolicitado;
 	
 }
