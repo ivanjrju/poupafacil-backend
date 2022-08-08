@@ -25,8 +25,8 @@ public class LoginController {
 	private final UsuarioServiceImpl usuarioService;
     private final JwtService jwtService;
     
-    Logger logger = LoggerFactory.getLogger(LoginController.class);
-	
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    
     @CrossOrigin
 	@PostMapping("/login")
     public ResponseEntity<TokenResponse> autenticar(@RequestBody LoginRequest loginRequest){

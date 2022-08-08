@@ -37,8 +37,8 @@ public class DespesaControllerImpl implements DespesaController {
 	private DespesaUseCase despesaUseCase;
 	private JwtService jwtService;
 	
-	Logger logger = LoggerFactory.getLogger(DespesaControllerImpl.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(DespesaControllerImpl.class);
+    
 	@Override
 	public ResponseEntity<List<DespesaResponse>> criarDespesa(
 			DespesaRequest despesaRequest,
