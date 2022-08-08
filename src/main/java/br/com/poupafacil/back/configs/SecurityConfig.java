@@ -47,7 +47,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	public void configure(WebSecurity web) {
-		web.ignoring().antMatchers("/swagger-ui/**", "/api-docs/**");
+		web
+			.ignoring().antMatchers("/swagger-ui/**", "/api-docs/**")
+		.and()
+			.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
 	}
 	
 	@Override
@@ -65,8 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasRole("USER")
             .antMatchers("/login","/api/pessoas/**")
                 .permitAll()
-//        	.antMatchers(HttpMethod.OPTIONS, "/**")
-//        		.permitAll()
+        	.antMatchers(HttpMethod.OPTIONS, "/**")
+        		.permitAll()
             .anyRequest().authenticated()
         .and()
             .sessionManagement()
@@ -79,6 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration cors = new CorsConfiguration();
+		cors.setAllowCredentials(true);
 	    cors.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "HEAD", "DELETE", "OPTIONS"));
 	    UrlBasedCorsConfigurationSource source = new
 	            UrlBasedCorsConfigurationSource();
