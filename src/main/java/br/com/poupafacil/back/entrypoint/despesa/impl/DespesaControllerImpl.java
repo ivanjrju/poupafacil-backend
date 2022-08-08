@@ -3,6 +3,8 @@ package br.com.poupafacil.back.entrypoint.despesa.impl;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.com.poupafacil.back.commons.enums.Periodo;
 import br.com.poupafacil.back.configs.JwtService;
+import br.com.poupafacil.back.entrypoint.LoginController;
 import br.com.poupafacil.back.entrypoint.despesa.DespesaController;
 import br.com.poupafacil.back.entrypoint.despesa.data.request.DespesaRequest;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoEstimativaDespesaResponse;
@@ -33,6 +36,8 @@ public class DespesaControllerImpl implements DespesaController {
 	private DespesaEntryPointMapper despesaEntryPointMapper;
 	private DespesaUseCase despesaUseCase;
 	private JwtService jwtService;
+	
+	Logger logger = LoggerFactory.getLogger(DespesaControllerImpl.class);
 
 	@Override
 	public ResponseEntity<List<DespesaResponse>> criarDespesa(
@@ -101,7 +106,8 @@ public class DespesaControllerImpl implements DespesaController {
 			String idCorrelacao,
 			String authorization) throws JsonMappingException, JsonProcessingException {
 	
-		System.out.println("idCorrelacao: "+idCorrelacao);
+		logger.info("idCorrelacao: "+idCorrelacao);
+		logger.info("authorization: "+authorization);
 		
 		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 

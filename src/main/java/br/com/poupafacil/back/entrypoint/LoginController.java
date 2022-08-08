@@ -1,5 +1,7 @@
 package br.com.poupafacil.back.entrypoint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,13 +24,15 @@ public class LoginController {
 	
 	private final UsuarioServiceImpl usuarioService;
     private final JwtService jwtService;
+    
+    Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
     @CrossOrigin
 	@PostMapping("/login")
     public ResponseEntity<TokenResponse> autenticar(@RequestBody LoginRequest loginRequest){
         
-    	System.out.println("email: "+loginRequest.getEmail());
-    	System.out.println("senha: "+loginRequest.getSenha());
+    	logger.info("email: "+loginRequest.getEmail());
+    	logger.info("senha: "+loginRequest.getSenha());
     	
     	try{
             usuarioService.autenticar(loginRequest);
