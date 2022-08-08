@@ -101,6 +101,8 @@ public class DespesaControllerImpl implements DespesaController {
 			String idCorrelacao,
 			String authorization) throws JsonMappingException, JsonProcessingException {
 	
+		System.out.println("idCorrelacao: "+idCorrelacao);
+		
 		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 
 		despesaUseCase.removerDespesasPorIdCorrelacaoUseCase(idCorrelacao, pessoaDataOutput);
