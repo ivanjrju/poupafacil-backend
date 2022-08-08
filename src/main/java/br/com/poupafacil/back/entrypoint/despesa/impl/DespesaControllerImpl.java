@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.com.poupafacil.back.commons.enums.Periodo;
 import br.com.poupafacil.back.configs.JwtService;
-import br.com.poupafacil.back.entrypoint.LoginController;
 import br.com.poupafacil.back.entrypoint.despesa.DespesaController;
 import br.com.poupafacil.back.entrypoint.despesa.data.request.DespesaRequest;
 import br.com.poupafacil.back.entrypoint.despesa.data.response.ConsolidadoEstimativaDespesaResponse;
@@ -37,7 +36,7 @@ public class DespesaControllerImpl implements DespesaController {
 	private DespesaUseCase despesaUseCase;
 	private JwtService jwtService;
 	
-	private static final Logger logger = LoggerFactory.getLogger(DespesaControllerImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(DespesaController.class);
     
 	@Override
 	public ResponseEntity<List<DespesaResponse>> criarDespesa(
