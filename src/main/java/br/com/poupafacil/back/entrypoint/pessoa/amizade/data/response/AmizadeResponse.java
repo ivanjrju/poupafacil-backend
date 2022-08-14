@@ -8,6 +8,5 @@ import lombok.Data;
 public class AmizadeResponse {
 
 	private String email;
-	private boolean aceito;
 	
 }

@@ -31,9 +31,6 @@ public class LoginController {
 	@PostMapping("/login")
     public ResponseEntity<TokenResponse> autenticar(@RequestBody LoginRequest loginRequest){
         
-    	logger.info("email: "+loginRequest.getEmail());
-    	logger.info("senha: "+loginRequest.getSenha());
-    	
     	try{
             usuarioService.autenticar(loginRequest);
             String token = jwtService.gerarToken(loginRequest);

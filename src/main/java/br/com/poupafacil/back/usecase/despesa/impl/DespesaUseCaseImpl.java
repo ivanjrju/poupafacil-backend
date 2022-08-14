@@ -3,10 +3,11 @@ package br.com.poupafacil.back.usecase.despesa.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -116,7 +117,7 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 			.orElseThrow();
 		
 		List<DespesaModel> despesasModel = buscarDespesasFacade.porGrupo(idGrupo, periodo);
-		HashSet<String> anoMes = buscarMesesNaDespesas(despesasModel);
+		Set<String> anoMes = buscarMesesNaDespesas(despesasModel);
 		return consolidarDespesasPorMes(despesasModel, anoMes);
 	}
 	
@@ -124,7 +125,7 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 	public List<ConsolidadoMesDespesaDataOutput> buscarDespesasPorPessoaUseCases(Long idPessoa, Periodo periodo, Long idGrupo) {
 		
 		List<DespesaModel> despesasModel = buscarDespesasFacade.porPessoa(idPessoa, periodo, idGrupo);
-		HashSet<String> anoMes = buscarMesesNaDespesas(despesasModel);
+		Set<String> anoMes = buscarMesesNaDespesas(despesasModel);
 		return consolidarDespesasPorMes(despesasModel, anoMes);
 	}
 	
@@ -132,11 +133,11 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 	public List<ConsolidadoMesDespesaDataOutput> buscarDespesasParaEstimativasUseCases(Long idPessoa) {
 		
 		List<DespesaModel> despesasModel = buscarDespesasFacade.porEstimativas(idPessoa);
-		HashSet<String> anoMes = buscarMesesNaDespesas(despesasModel);
+		Set<String> anoMes = buscarMesesNaDespesas(despesasModel);
 		return consolidarDespesasPorMes(despesasModel, anoMes);
 	}	
 
-	private List<ConsolidadoMesDespesaDataOutput> consolidarDespesasPorMes(List<DespesaModel> despesasModel, HashSet<String> anoMes) {
+	private List<ConsolidadoMesDespesaDataOutput> consolidarDespesasPorMes(List<DespesaModel> despesasModel, Set<String> anoMes) {
 	
 		List<ConsolidadoMesDespesaDataOutput> consolidadosMesesDespesasDataOutput = new ArrayList<ConsolidadoMesDespesaDataOutput>();
 			
@@ -160,12 +161,13 @@ public class DespesaUseCaseImpl implements DespesaUseCase {
 		return consolidadosMesesDespesasDataOutput;
 	}
 
-	private HashSet<String> buscarMesesNaDespesas(List<DespesaModel> despesasModel) {
+	private Set<String> buscarMesesNaDespesas(List<DespesaModel> despesasModel) {
 		
-		HashSet<String> anoMes = new HashSet<String>();
+		Set<String> anoMes = new LinkedHashSet<String>();
 		for(DespesaModel despesaModel : despesasModel) {
-			anoMes.add(despesaModel.getData().toString().substring(0, 7));
+			anoMes.add(despesaModel.getData().toString().substring(0, 7));	
 		}
+		
 		return anoMes;
 	}
 

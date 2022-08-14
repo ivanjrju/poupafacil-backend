@@ -17,19 +17,18 @@ import br.com.poupafacil.back.entrypoint.pessoa.amizade.data.request.AmizadeRequ
 import br.com.poupafacil.back.entrypoint.pessoa.amizade.data.response.AmizadeResponse;
 
 @RestController
-@RequestMapping("/api/pessoas/amizade")
+@RequestMapping("/api/pessoas/amizades")
 public interface AmizadeController {
 
 	@CrossOrigin
 	@PostMapping
-	public ResponseEntity<List<AmizadeResponse>> solicitarAmizade(
+	public ResponseEntity<Void> solicitarAmizade(
 			@RequestBody @Valid AmizadeRequest amizadeRequest,
 			@RequestHeader("Authorization") String authorization);
 	
 	@CrossOrigin
 	@GetMapping
 	public ResponseEntity<List<AmizadeResponse>> listarPedidoAmizade(
-			@RequestBody @Valid AmizadeRequest amizadeRequest,
 			@RequestHeader("Authorization") String authorization);
 	
 	@CrossOrigin
