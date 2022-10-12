@@ -10,5 +10,5 @@ import lombok.Data;
 public class GrupoDataInput {
 
 	private String nome;
-	private List<Long> participantes;
+	private List<String> participantes;
 }

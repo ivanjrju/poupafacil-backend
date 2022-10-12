@@ -13,5 +13,5 @@ public class GrupoRequest {
 	private String nome;
 
 	@NotEmpty(message = "'participantes' é obrigatório")
-	private List<Long> participantes;
+	private List<String> participantes;
 }

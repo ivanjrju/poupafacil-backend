@@ -16,12 +16,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "amizade")
-public class AmizadeModel {
+@Table(name = "pedidoAmizade")
+public class PedidoAmizadeModel {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	private Long idPedidoAmizade;
 	
-	private String amizadeEmail;
+	private String emailSolicitado;
+	private String emailSolicitante;
 }

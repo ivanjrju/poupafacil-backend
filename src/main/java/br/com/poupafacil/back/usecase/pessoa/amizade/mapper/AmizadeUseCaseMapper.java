@@ -5,29 +5,29 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import br.com.poupafacil.back.gateway.pessoa.amizade.model.AmizadeModel;
+import br.com.poupafacil.back.gateway.pessoa.amizade.model.PedidoAmizadeModel;
 import br.com.poupafacil.back.usecase.pessoa.amizade.data.input.AmizadeDataInput;
 import br.com.poupafacil.back.usecase.pessoa.amizade.data.output.AmizadeDataOuput;
 
 @Component
 public class AmizadeUseCaseMapper {
 
-	public AmizadeModel fromAmizadeModel(AmizadeDataInput amizadeDataInput) {
+	public PedidoAmizadeModel fromAmizadeModel(AmizadeDataInput amizadeDataInput) {
 		
-		return AmizadeModel.builder()
+		return PedidoAmizadeModel.builder()
 				.emailSolicitante(amizadeDataInput.getEmailSolicitante())
 				.emailSolicitado(amizadeDataInput.getEmailSolicitado())
 				.build();
 	}
 	
-	public AmizadeDataOuput toAmizadeModel(AmizadeModel amizadeModel) {
+	public AmizadeDataOuput toAmizadeModel(PedidoAmizadeModel pedidoAmizadeModel) {
 		
 		return AmizadeDataOuput.builder()
-				.email(amizadeModel.getEmailSolicitante())
+				.email(pedidoAmizadeModel.getEmailSolicitante())
 				.build();
 	}
 
-	public List<AmizadeDataOuput> toAmizadesModel(List<AmizadeModel> amizadesModel) {
+	public List<AmizadeDataOuput> toAmizadesModel(List<PedidoAmizadeModel> amizadesModel) {
 		
 		return amizadesModel.stream().map(amizadeModel -> toAmizadeModel(amizadeModel)).collect(Collectors.toList());
 	}

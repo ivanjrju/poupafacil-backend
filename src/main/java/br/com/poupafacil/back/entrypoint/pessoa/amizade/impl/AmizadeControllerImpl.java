@@ -47,12 +47,12 @@ public class AmizadeControllerImpl implements AmizadeController {
 	}
 
 	@Override
-	public ResponseEntity<List<AmizadeResponse>> aceitarPedidoAmizade(@Valid AmizadeRequest amizadeRequest,
+	public ResponseEntity<List<AmizadeResponse>> aceitarPedidoAmizade(
+			String email,
 			String authorization) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
+		List<AmizadeDataOuput> amizadesDataOuput = amizadeUseCase.aceitarPedidoAmizade(pessoaDataOutput.getEmail(), email);
+		return new ResponseEntity<List<AmizadeResponse>>(amizadeEntryPointMapper.toAmizadesResponse(amizadesDataOuput), HttpStatus.OK);
 	}
-
-
-
 }

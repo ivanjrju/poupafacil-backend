@@ -33,9 +33,9 @@ public class GrupoControllerImpl implements GrupoController {
 		
 		PessoaDataOutput pessoaDataOutput = jwtService.obterPessoa(authorization);
 		
-		List<Long> participantes = grupoRequest.getParticipantes();
-		if(!participantes.contains(pessoaDataOutput.getIdPessoa())) {
-			participantes.add(pessoaDataOutput.getIdPessoa());
+		List<String> participantes = grupoRequest.getParticipantes();
+		if(!participantes.contains(pessoaDataOutput.getEmail())) {
+			participantes.add(pessoaDataOutput.getEmail());
 		}
 		
 		GrupoDataInput grupoDataInput = grupoEntryPointMapper.fromGrupoDataInput(grupoRequest);

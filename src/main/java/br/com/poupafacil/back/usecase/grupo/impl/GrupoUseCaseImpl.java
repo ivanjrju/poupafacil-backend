@@ -39,7 +39,7 @@ public class GrupoUseCaseImpl implements GrupoUseCase {
 	private void incluirPessoasNoGrupo(GrupoDataInput grupoDataInput, GrupoModel grupoModel) {
 		
 		List<PessoaDataOutput> pessoasDataOutput = grupoDataInput.getParticipantes().stream()
-				.map(idPessoa -> pessoaUseCase.buscarPessoaUseCase(idPessoa))
+				.map(email -> pessoaUseCase.buscarPessoaPorEmailUseCase(email))
 				.collect(Collectors.toList());
 			
 		List<PessoaModel> pessoasModel = pessoaUseCaseMapper.toPessoaDataOutput(pessoasDataOutput);

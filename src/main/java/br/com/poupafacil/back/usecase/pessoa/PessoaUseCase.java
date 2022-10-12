@@ -7,5 +7,6 @@ public interface PessoaUseCase {
 
 	public PessoaDataOutput criarPessoaUseCase(PessoaDataInput pessoaDataInput);
 	public PessoaDataOutput buscarPessoaUseCase(Long idPessoa);
+	public PessoaDataOutput buscarPessoaPorEmailUseCase(String email);
 	
 }

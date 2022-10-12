@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -32,9 +34,9 @@ public interface AmizadeController {
 			@RequestHeader("Authorization") String authorization);
 	
 	@CrossOrigin
-	@PostMapping("aceite")
+	@PatchMapping("/{email}/aceite")
 	public ResponseEntity<List<AmizadeResponse>> aceitarPedidoAmizade(
-			@RequestBody @Valid AmizadeRequest amizadeRequest,
+			@PathVariable("email") String email,
 			@RequestHeader("Authorization") String authorization);
 	
 }

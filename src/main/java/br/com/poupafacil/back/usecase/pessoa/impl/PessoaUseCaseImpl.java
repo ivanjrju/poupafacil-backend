@@ -36,4 +36,11 @@ public class PessoaUseCaseImpl implements PessoaUseCase {
 		PessoaModel pessoaModel = pessoaRepository.getById(idPessoa);
 		return pessoaUseCaseMapper.toPessoaModel(pessoaModel);
 	}
+
+	@Override
+	public PessoaDataOutput buscarPessoaPorEmailUseCase(String email) {
+		
+		PessoaModel pessoaModel = pessoaRepository.findByEmail(email).get();
+		return pessoaUseCaseMapper.toPessoaModel(pessoaModel);
+	}
 }

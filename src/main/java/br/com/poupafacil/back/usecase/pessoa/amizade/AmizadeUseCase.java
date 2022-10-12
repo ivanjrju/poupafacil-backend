@@ -9,4 +9,5 @@ public interface AmizadeUseCase {
 
 	public void solicitarAmizade(AmizadeDataInput amizadeDataInput);
 	public List<AmizadeDataOuput> listarPedidoAmizade(String email);
+	public List<AmizadeDataOuput> aceitarPedidoAmizade(String pessoa, String emailSolicitante);
 }
